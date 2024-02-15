@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.6.0;
+pragma solidity ^0.8.0;
 
 import {SafeMath} from './lib/SafeMath.sol';
 
@@ -10,7 +10,7 @@ contract Fallout {
   address payable public owner;
 
   function Fal1out() public payable {
-    owner = msg.sender;
+    owner = payable(msg.sender);
     allocations[owner] = msg.value;
   }
 
@@ -28,11 +28,11 @@ contract Fallout {
 
   function sendAllocation(address payable allocator) public {
     require(allocations[allocator] > 0);
-    allocator.transfer(allocations[allocator]);
+    payable(allocator).transfer(allocations[allocator]);
   }
 
   function collectAllocations() public onlyOwner {
-    msg.sender.transfer(address(this).balance);
+    payable(msg.sender).transfer(address(this).balance);
   }
 
   function allocatorBalance(address allocator) public view returns (uint) {
