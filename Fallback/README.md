@@ -1,6 +1,8 @@
-## Foundry
+## Ethernaut Fallback  Contract Challange
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+**Challenge To Achive**
+1. Take OwnerShip Of the Contract
+2. Make Contract Balance to Zero
 
 Foundry consists of:
 
