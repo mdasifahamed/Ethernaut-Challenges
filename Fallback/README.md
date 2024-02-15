@@ -4,65 +4,28 @@
 1. Take OwnerShip Of the Contract
 2. Make Contract Balance to Zero
 
-Foundry consists of:
+**Exploit** The vulnerability lies in the `receive()` function of `Fallback` contract. 
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+``` javascript
+ receive() external payable {
+    require(msg.value > 0 && contributions[msg.sender] > 0);
+@>  owner = msg.sender;
+  }
+```
+Which let user to send ether to contract directly. But it set `owner` variable to `msg.sender` that means anyone sends ether to contract can be the owner of owner and gets control of contract as well as the  `withdraw()` function.
 
-## Documentation
+**POC** POC can be found At `./test/FallbackTest.t.sol` have a look how the attack can be done.
 
-https://book.getfoundry.sh/
+## Try The Test 
 
-## Usage
-
-### Build
+Run The Following Command And See The Results
 
 ```shell
 $ forge build
 ```
 
-### Test
-
 ```shell
 $ forge test
 ```
 
-### Format
 
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
