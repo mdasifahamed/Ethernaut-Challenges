@@ -1,66 +1,30 @@
-## Foundry
+## FallOut Challege
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+**Challenge To Achive**
+1. Take OwnerShip Of the Contract
 
-Foundry consists of:
+**Exploit** The vulnerability lies in the `Fal1out()` function of `Fallout` contract. 
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+```javascript
+  function Fal1out() public payable {
+    owner = payable(msg.sender);
+    allocations[owner] = msg.value;
+  }
+```
+Which Sets The Owner Of Contract Using `owner = payable(msg.sender)` which is not proper to set this type state varible 
+the varibale should be set from the `constructor()` which only executes once  at the time of deployment. This `Fal1out()` is can be call by any user. But `constructor()` is only called at tome of deployment and the sepolyer is the caller / executor of the `constructor()`.
 
-## Documentation
+**POC** POC can be found At `./test/FallOutTest.t.sol` have a look how the attack can be done.
 
-https://book.getfoundry.sh/
+## Try The Test 
 
-## Usage
-
-### Build
+Run The Following Command And See The Results
 
 ```shell
 $ forge build
 ```
 
-### Test
-
 ```shell
 $ forge test
 ```
 
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
