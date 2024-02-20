@@ -56,7 +56,7 @@ contract TokenTest is Test {
         /**
             let say user1 has 20 token 
             and he sees that underflow/overflow issue is handled
-            he undeflow the uint and steal as musch he want
+            he undeflow the uint and steal as much he want
          */
         
         // lets give 20 tokens to the user1
@@ -65,12 +65,14 @@ contract TokenTest is Test {
         vm.stopPrank();
         assertEq(token.balanceOf(user1), 20);
 
-        // user1 attactks with 200000 token amount to anoether address user1Clone with underflow attack
+        // user1 attackts with 200000 token amount to another address user1Clone with underflow/overflow attack
         
         vm.prank(user1);
         token.transfer(user1Clone, 200000);
         vm.stopPrank();
         assertEq(token.balanceOf(user1Clone), 200000);
+
+        
 
       
 
