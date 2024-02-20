@@ -7,3 +7,6 @@
 [submodule "Telephone/lib/forge-std"]
 	path = Telephone/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "Token/lib/forge-std"]
+	path = Token/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
