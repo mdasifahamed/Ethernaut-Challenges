@@ -82,3 +82,14 @@ $ forge build
 $ forge test
 ```
 
+Risk of Delegate Call With Fallback Risk in Solidity
+
+
+
+Ethernaut Delegation Challenge : https://ethernaut.openzeppelin.com/level/0x73379d8B82Fda494ee59555f333DF7D44483fD58
+The delegate call is a low-level call in Solidity. The minimal concept of the delegate call is that it uses the storage of the contract that invokes the delegate call and employs functions from the contract called by the delegate call. An example can be illustrated with Contract A, which has certain functionalities. Contract B can utilize Contract A's functions by using a delegate call, but the storage used will be from Contract A, not Contract B. This means that if Contract A has a storage variable 'x' and Contract B has a unique function to do something with that storage variable 'x' Contract A can use a delegate call to employ Contract B's function to update Contract A's storage variable, without affecting Contract B's storage variable.
+
+Attacking Scope : Contract Delegate has function to change the onwer of a contract which is pwn(). Contract Delegation uses Delegate contract in its fallback contract with delegatecall. If someone sends a transaction to the Delegation contract with or without ether but includes in the data field the name of the pwn() function, the transaction will use msg.data for that transaction. Since Delegation does not have any function named pwn(), but it does have a fallback function, the transaction will trigger the fallback() function. The fallback() function is implemented with a delegate call to the Delegate contract, as the msg.data contains pwn(). The Delegate contract has the pwn() function, and the delegate call expects a parameter, which is provided by msg.data as pwn(). Consequently, the logic of pwn() will be executed in the Delegation contract, resulting in a change of ownership.
+
+
+
