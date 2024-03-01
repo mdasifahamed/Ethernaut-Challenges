@@ -16,3 +16,6 @@
 [submodule "Force/lib/forge-std"]
 	path = Force/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "King/lib/forge-std"]
+	path = King/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
